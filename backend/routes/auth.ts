@@ -13,7 +13,7 @@ interface UserDetails {
   role: string
 }
 
-router.get("/", async (req, res) => {
+router.get("/register", async (req, res) => {
   try {
     const userDetails: UserDetails = req.body;
 
