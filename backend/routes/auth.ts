@@ -20,10 +20,6 @@ interface LoginDetails {
   password: string;
 }
 
-interface tokenDetails{ 
-  token: string; 
-}
-
 router.post("/register", validInfo, async (req: Request, res: Response) => {
   try {
     const userDetails: UserDetails = req.body;
@@ -91,7 +87,7 @@ router.post("/login", validInfo, async(req: Request, res: Response) => {
 router.get("/is-verify", authorization, async(req: Request, res: Response) => {
   try {
     return res.send({
-      result: true
+      authenticated: true
     })
   } catch (error) {
     return res.status(500).send(error);

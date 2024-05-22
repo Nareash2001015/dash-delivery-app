@@ -4,7 +4,8 @@ import { JWT_SECRET } from "../config";
 const jwt = require("jsonwebtoken");
 
 module.exports = async (req: Request, res: Response, next: any) => {
-  const token: string | undefined = req.header("token");
+  const authorization: string | undefined = req.header("Authorization");
+  const token = authorization?.split(" ")[1]; 
   if (!token) {
     res.status(403).send({
       error: "Unauthorized user",
