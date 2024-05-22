@@ -1,9 +1,11 @@
-import express, { Router } from "express";
+import express, { Router, Request, Response } from "express";
 import User from "../database/models/user";
 import jwtGenerator from "../utils/jwtGenerator";
 
 const router: Router = express.Router();
 const bcrypt: any = require("bcrypt");
+const validInfo = require("../middleware/validInfo");
+const authorization = require("../middleware/authorization");
 
 interface UserDetails {
   name: string;
@@ -18,7 +20,11 @@ interface LoginDetails {
   password: string;
 }
 
-router.post("/register", async (req, res) => {
+interface tokenDetails{ 
+  token: string; 
+}
+
+router.post("/register", validInfo, async (req: Request, res: Response) => {
   try {
     const userDetails: UserDetails = req.body;
 
@@ -54,7 +60,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async(req, res) => {
+router.post("/login", validInfo, async(req: Request, res: Response) => {
   try {
     const loginDetails: LoginDetails = req.body;
 
@@ -78,8 +84,19 @@ router.post("/login", async(req, res) => {
     const token = jwtGenerator(user.id, user.role);
     res.status(200).json({token});
   } catch (error) {
-    
+    return res.status(500).send(error);
+  }
+})
+
+router.get("/is-verify", authorization, async(req: Request, res: Response) => {
+  try {
+    return res.send({
+      result: true
+    })
+  } catch (error) {
+    return res.status(500).send(error);
   }
 })
 
 export default router;
+
