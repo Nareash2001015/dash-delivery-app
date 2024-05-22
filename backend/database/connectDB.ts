@@ -1,44 +1,15 @@
-import { Sequelize } from "sequelize";
-import { HOSTNAME, DATABASE, USERNAME, PASSWORD } from "../config";
-import { DataTypes } from "sequelize";
 import User from "./models/user";
 import Shipment from "./models/shipment";
+import { HOSTNAME, DATABASE, USERNAME, PASSWORD } from "../config";
+import { Sequelize } from "sequelize";
 
+// There is a problem in Sequelize this imports 'undefined' when I use in other modules so I added this to all related files (sequelize duplicated)
 const sequelize: Sequelize = new Sequelize(DATABASE, USERNAME, PASSWORD, {
   host: HOSTNAME,
   dialect: "postgres",
 });
 
-Shipment.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-  },
-  {
-    tableName: "shipment",
-    sequelize: sequelize, // this bit is important
-  }
-);
-sequelize.sync();
-
-User.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-  },
-  {
-    tableName: "user",
-    sequelize: sequelize, // this bit is important
-  }
-);
-
+// Assciations
 User.hasMany(Shipment, { foreignKey: "user_id" });
-sequelize.sync();
 
 export default sequelize;
