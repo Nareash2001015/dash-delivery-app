@@ -13,7 +13,12 @@ interface UserDetails {
   role: string
 }
 
-router.get("/register", async (req, res) => {
+interface LoginDetails {
+  email: string;
+  password: string;
+}
+
+router.post("/register", async (req, res) => {
   try {
     const userDetails: UserDetails = req.body;
 
@@ -39,8 +44,8 @@ router.get("/register", async (req, res) => {
     // Insert new User
     await User.create(userDetails).then(user => {
       // Create JWT access token
-      const accessToken: string = jwtGenerator(user.id, userDetails.role);
-      return res.status(202).json({accessToken});
+      const token: string = jwtGenerator(user.id, userDetails.role);
+      return res.status(202).json({token});
     }).catch((error: any) => {
       return res.status(400).send(error);
     })
@@ -48,5 +53,33 @@ router.get("/register", async (req, res) => {
     return res.status(500).send(error);
   }
 });
+
+router.post("/login", async(req, res) => {
+  try {
+    const loginDetails: LoginDetails = req.body;
+
+    // Error user does not exist
+    const user: User | null = await User.findOne({where: {email: loginDetails.email}});
+    if(!user){
+      return res.status(401).send({
+        "error": "The user does not exist" 
+      });
+    }
+
+    // Error wrong password
+    const match = await bcrypt.compare(loginDetails.password, user.password);
+    if(!match){
+      return res.status(403).send({
+        "error": "Invalid user credentials"
+      })
+    }
+
+    // Generate JWT token
+    const token = jwtGenerator(user.id, user.role);
+    res.status(200).json({token});
+  } catch (error) {
+    
+  }
+})
 
 export default router;
