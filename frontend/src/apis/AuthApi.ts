@@ -25,10 +25,10 @@ export const registrationApi = async (registrationDetails: RegistrationDetails):
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      console.error(`Error in loginApi: ${error.response.data.message}`);
+      console.error(`Error in registrationApi: ${error.response.data.message}`);
       throw new Error(error.response.data.message);
     } else {
-      console.error(`Error in loginApi: ${error}`);
+      console.error(`Error in registrationApi: ${error}`);
       throw error;
     }
   }

@@ -106,11 +106,18 @@ export const AuthProvider = ({ children }: Props) => {
     }
   };
 
-  const logout = (): void => {
+  const logout = async (): Promise<void> => {
     try {
+      console.log("Reached code")
       setToken("");
       localStorage.removeItem("token");
       setIsAuthenticated(false);
+      toast({
+        title: "Logout successful",
+        position: "top-right",
+        status: "success",
+        isClosable: true,
+      });
     } catch (error) {
       console.log(`Error in login function : ${error}`);
     }

@@ -91,12 +91,8 @@ const Login: React.FC<LoginProps> = ({ setIsLoginPage }) => {
   return (
     <div className="flex justify-center items-center h-screen bg-delivery-image bg-cover bg-no-repeat">
       <div className="flex w-2/3 flex-row rounded-3xl bg-gray-100 bg-opacity-45">
-        <div className="flex flex-col  justify-center rounded-3xl w-2/5  bg-gradient-to-l from-gray-100 to-blue-200">
-          <div className="bg-dash-delivery-logo bg-cover mt-10 h-40 w-60"></div>
-          <div className="m-5 text-sm text-blue-950 border">
-            Track your parcels in real-time and ensure secure delivery every
-            time !!!
-          </div>
+        <div className="flex flex-col items-center rounded-3xl w-2/5">
+          <div className="bg-dash-delivery-logo rounded-2x bg-cover mt-20 h-32 w-40"></div>
         </div>
         <div className=" p-5  w-3/5 ">
           <div>
@@ -128,12 +124,12 @@ const Login: React.FC<LoginProps> = ({ setIsLoginPage }) => {
               </Button>
             </FormControl>
             <p>
-              Already have an account?{" "}
+              Don't have an account ?{" "}
               <label
                 className="text-blue-600 font-bold"
                 onClick={() => setIsLoginPage(false)}
               >
-                Login
+                Sign up
               </label>
             </p>
           </div>

@@ -32,7 +32,7 @@ function NavBar() {
                 <Avatar src="https://bit.ly/broken-link" />
               </MenuButton>
               <MenuList>
-                <MenuItem onClick={() => logout}>Logout</MenuItem>
+                <MenuItem onClick={() => logout()}>Logout</MenuItem>
               </MenuList>
             </>
           )}
