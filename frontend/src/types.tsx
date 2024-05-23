@@ -85,8 +85,18 @@ export interface ShipmentInfo {
   shipmentStatus?: string;
 }
 
-export interface ModelProps {
+export interface CreateShipmentModelProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
   userInfo: UserInfo;
+  setShipmentInfo: React.Dispatch<React.SetStateAction<ShipmentInfo[]>>;
 }
+
+export interface UpdateShipmentModelProps {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpen: boolean;
+  userInfo: UserInfo;
+  setShipmentInfo: React.Dispatch<React.SetStateAction<ShipmentInfo[]>>;
+  shipment: ShipmentInfo;
+}
+

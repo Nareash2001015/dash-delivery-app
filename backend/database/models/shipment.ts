@@ -11,6 +11,7 @@ import { ShipmentAttributes } from "../../types";
 const sequelize: Sequelize = new Sequelize(DATABASE, USERNAME, PASSWORD, {
   host: HOSTNAME,
   dialect: "postgres",
+
 });
 
 type ShipmentCreationAttributes = Optional<ShipmentAttributes, "id">;
@@ -60,7 +61,7 @@ Shipment.init(
     shipmentStatus: {
       type: DataTypes.ENUM,
       values: ["pending", "in transit", "delivered"],
-      defaultValue: "customer",
+      defaultValue: "pending",
     }
   },
   {
