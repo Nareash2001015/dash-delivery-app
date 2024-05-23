@@ -8,10 +8,11 @@ import { useNavigate } from "react-router-dom";
 function Home() {
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
-  const token = authContext.token;
+  // const token = authContext.token;
+  const isAuthenticated = authContext.isAuthenticated;
   useEffect(() => {
-    if(token){
-      navigate("/dashboard")
+    if(isAuthenticated){
+      navigate("/dashboard");
     }
   })
   const[isLoginPage, setIsLoginPage] = useState<boolean>(true);

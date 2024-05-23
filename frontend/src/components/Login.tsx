@@ -32,7 +32,6 @@ const Login: React.FC<LoginProps> = ({ setIsLoginPage }) => {
     try {
       await login(email, password);
     } catch (error) {
-      console.log("Reached here : " + error);
       let errorMessage: string;
       if (error instanceof Error) {
         errorMessage = error.message;
@@ -93,7 +92,7 @@ const Login: React.FC<LoginProps> = ({ setIsLoginPage }) => {
     <div className="flex justify-center items-center h-screen bg-delivery-image bg-cover bg-no-repeat">
       <div className="flex w-2/3 flex-row rounded-3xl bg-gray-100 bg-opacity-45">
         <div className="flex flex-col  justify-center rounded-3xl w-2/5  bg-gradient-to-l from-gray-100 to-blue-200">
-          <div className="  bg-dash-delivery-logo  bg-cover h-40 w-54"></div>
+          <div className="bg-dash-delivery-logo bg-cover mt-10 h-40 w-60"></div>
           <div className="m-5 text-sm text-blue-950 border">
             Track your parcels in real-time and ensure secure delivery every
             time !!!

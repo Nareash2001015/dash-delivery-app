@@ -2,8 +2,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createContext, useEffect, useState } from "react";
-import { JwtPayload, LoginDetails, Token, User } from "../types";
-import { isAuthenticateApi, loginApi } from "../apis/AuthApi";
+import {
+  JwtPayload,
+  LoginDetails,
+  RegistrationDetails,
+  Token,
+  User,
+} from "../types";
+import { isAuthenticateApi, loginApi, registrationApi } from "../apis/AuthApi";
 import { AuthContextInterface, Props } from "../types";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
@@ -17,6 +23,13 @@ const defaultAuthContext: AuthContextInterface = {
   },
   token: "",
   isAuthenticated: false,
+  register: () => {
+    throw new Error("register function not implemented");
+  },
+  user: {
+    userId: 0,
+    role: "",
+  },
 };
 
 export const AuthContext =
@@ -38,6 +51,7 @@ export const AuthProvider = ({ children }: Props) => {
         if (availableToken != null) {
           setToken(availableToken);
           await isAuthenticateApi(availableToken);
+          setIsAuthenticated(true);
           extractTokenPayload(availableToken);
         } else {
           navigate("/home");
@@ -62,13 +76,13 @@ export const AuthProvider = ({ children }: Props) => {
     fetchAuthenticationInfo();
   }, []);
 
-  function extractTokenPayload(token: string): User {
+  function extractTokenPayload(token: string): void {
     const payload: string = token.split(".")[1];
     const payloadJson: JwtPayload = JSON.parse(atob(payload));
-    return {
+    setUser({
       userId: payloadJson.user,
       role: payloadJson.role,
-    };
+    });
   }
 
   const login = async (email: string, password: string): Promise<void> => {
@@ -78,6 +92,12 @@ export const AuthProvider = ({ children }: Props) => {
       setToken(response.token);
       localStorage.setItem("token", response.token);
       navigate("/dashboard");
+      toast({
+        title: "Login successful",
+        position: "top-right",
+        status: "success",
+        isClosable: true,
+      });
       setIsAuthenticated(true);
       extractTokenPayload(response.token);
     } catch (error) {
@@ -96,11 +116,46 @@ export const AuthProvider = ({ children }: Props) => {
     }
   };
 
+  const register = async (
+    name: string,
+    email: string,
+    password: string,
+    address: string
+  ) => {
+    try {
+      const role: string = "customer";
+      const registrationDetails: RegistrationDetails = {
+        name,
+        email,
+        password,
+        address,
+        role,
+      };
+      const response: Token = await registrationApi(registrationDetails);
+      setToken(response.token);
+      localStorage.setItem("token", response.token);
+      navigate("/dashboard");
+      toast({
+        title: "Registration complete",
+        position: "top-right",
+        status: "success",
+        isClosable: true,
+      });
+      setIsAuthenticated(true);
+      extractTokenPayload(response.token);
+    } catch (error) {
+      console.log(`Error in login function : ${error}`);
+      throw error;
+    }
+  };
+
   const value: AuthContextInterface = {
     token,
     login,
     logout,
     isAuthenticated,
+    register,
+    user,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

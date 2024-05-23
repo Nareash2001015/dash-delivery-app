@@ -2,6 +2,7 @@
 import { useContext, useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from '../provider/AuthProvider';
+import NavBar from '../components/NavBar';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -9,12 +10,14 @@ function Dashboard() {
   // const token = authContext.token;
   const isAuthenticated = authContext.isAuthenticated;
   useEffect(() => {
-    if(isAuthenticated){
-      navigate("/dashboard")
+    if(!isAuthenticated){
+      navigate("/home")
     }
   })
   return (
-    <div>Dashboard</div>
+    <div className='bg-gray-100 h-screen'>
+      <NavBar />
+    </div>
   )
 }
 

@@ -1,7 +1,14 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useContext } from "react";
-import { FormControl, FormLabel, Input, Button, Textarea } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  Textarea,
+  useToast,
+} from "@chakra-ui/react";
 import validator from "validator";
 import { AuthContext } from "../provider/AuthProvider";
 import { LoginProps } from "../types";
@@ -33,8 +40,27 @@ const Register: React.FC<LoginProps> = ({ setIsLoginPage }) => {
     useState<boolean>(true);
 
   const authContext = useContext(AuthContext);
+  const toast = useToast();
+  const register = authContext.register;
 
-  const login = authContext.login;
+  const handleRegister = async () => {
+    try {
+      await register(name, email, password, address);
+    } catch (error) {
+      let errorMessage: string;
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = String(error);
+      }
+      toast({
+        title: errorMessage,
+        position: "top-right",
+        status: "error",
+        isClosable: true,
+      });
+    }
+  };
 
   const handleEmailChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -53,8 +79,8 @@ const Register: React.FC<LoginProps> = ({ setIsLoginPage }) => {
     target: { value: React.SetStateAction<string> };
   }) => {
     setName(e.target.value);
-    if (name.length < 8) {
-      setPasswordError("Name should be at least 3 characters long");
+    if (name.length < 3) {
+      setNameError("Name should be at least 3 characters long");
       setNameErrorFlag(true);
     } else {
       setNameErrorFlag(false);
@@ -80,19 +106,19 @@ const Register: React.FC<LoginProps> = ({ setIsLoginPage }) => {
   }) => {
     setConfirmPassword(e.target.value);
     if (confirmPassword.length < 8) {
-      setPasswordError("Password should be at least 8 characters long");
+      setConfirmPasswordError("Password should be at least 8 characters long");
     }
     if (!/\d/.test(confirmPassword)) {
-      setPasswordError("Add at least one number");
+      setConfirmPasswordError("Add at least one number");
     }
     if (!/[A-Z]/.test(confirmPassword) || !/[a-z]/.test(confirmPassword)) {
-      setPasswordError("Include both upper and lower case letters");
+      setConfirmPasswordError("Include both upper and lower case letters");
     }
     if (!/[^A-Za-z0-9]/.test(confirmPassword)) {
-      setPasswordError("Include at least one special character");
+      setConfirmPasswordError("Include at least one special character");
     }
     if (password === confirmPassword) {
-      setPasswordError("passwords are not matching");
+      setConfirmPasswordError("passwords are not matching");
     }
     if (
       confirmPassword.length > 8 &&
@@ -195,7 +221,7 @@ const Register: React.FC<LoginProps> = ({ setIsLoginPage }) => {
                   addressErrorFlag ||
                   confirmPasswordErrorFlag
                 }
-                onClick={() => login(email, password)}
+                onClick={handleRegister}
               >
                 Register
               </Button>
@@ -214,7 +240,6 @@ const Register: React.FC<LoginProps> = ({ setIsLoginPage }) => {
       </div>
     </div>
   );
-  
-}
+};
 
-export default Register
+export default Register;

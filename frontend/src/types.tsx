@@ -6,15 +6,17 @@ export interface LoginDetails {
   password: string;
 }
 
-export interface AuthContextInterface{
-  token: string,
+export interface AuthContextInterface {
+  token: string;
   logout: () => void;
   login: (email: string, password: string) => Promise<void>;
   isAuthenticated: boolean;
+  register: (name: string, email: string, password: string, address: string) => Promise<void>;
+  user: User;
 }
 
 export interface Props {
-    children?: ReactNode;
+  children?: ReactNode;
 }
 
 export interface Token {
@@ -39,8 +41,16 @@ export interface User {
 }
 
 export interface JwtPayload {
-  user: number,
+  user: number;
   role: string;
   iat: string;
   exp: number;
+}
+
+export interface RegistrationDetails {
+  name: string;
+  email: string;
+  password: string;
+  address: string;
+  role: string;
 }
