@@ -8,8 +8,6 @@ const bcrypt: any = require("bcrypt");
 const validInfo = require("../middleware/validInfo");
 const authorization = require("../middleware/authorization");
 
-
-
 router.post("/register", validInfo, async (req: Request, res: Response) => {
   try {
     const userDetails: UserAttributes = req.body;

@@ -10,7 +10,7 @@ export interface LoginDetails {
 }
 
 export type UserAttributes = {
-  id?: number;
+  id: number;
   name: string;
   address: string;
   email: string;
@@ -19,7 +19,7 @@ export type UserAttributes = {
 };
 
 export type ShipmentAttributes = {
-  id?: number;
+  id: number;
   senderName: string;
   senderAddress: string;
   recipientName: string;

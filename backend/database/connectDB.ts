@@ -10,6 +10,6 @@ const sequelize: Sequelize = new Sequelize(DATABASE, USERNAME, PASSWORD, {
 });
 
 // Assciations
-User.hasMany(Shipment, { foreignKey: "user_id" });
+User.hasMany(Shipment, { foreignKey: "userId" });
 
 export default sequelize;

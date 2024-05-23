@@ -59,12 +59,12 @@ Shipment.init(
     },
     shipmentStatus: {
       type: DataTypes.ENUM,
-      values: ["admin", "customer"],
+      values: ["pending", "in transit", "delivered"],
       defaultValue: "customer",
     }
   },
   {
-    tableName: "user",
+    tableName: "shipment",
     sequelize: sequelize, // this bit is important
   }
 );
