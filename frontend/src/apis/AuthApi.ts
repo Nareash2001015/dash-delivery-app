@@ -1,30 +1,39 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import ApiManager from "./ApiManager";
-import { LoginDetails } from "../types";
+import { AuthenticatedStatus, LoginDetails, Token } from "../types";
+import axios from "axios";
 
-export const loginApi = async (loginDetails: LoginDetails) => {
+export const loginApi = async (loginDetails: LoginDetails): Promise<Token> => {
   try {
-    const response = await ApiManager.post("/auth/login", loginDetails, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    console.log(response);
+    const response = await ApiManager.post('/auth/login', loginDetails);
+    return response.data;
   } catch (error) {
-    console.log(`Error in loginApi : ${error}`);
+    if (axios.isAxiosError(error) && error.response) {
+      console.error(`Error in loginApi: ${error.response.data.message}`);
+      throw new Error(error.response.data.message);
+    } else {
+      console.error(`Error in loginApi: ${error}`);
+      throw error;
+    }
   }
 };
 
-export const isAuthenticateApi = async (token: string) => {
+export const isAuthenticateApi = async (token: string): Promise<AuthenticatedStatus> => {
   try {
     const response = await ApiManager.get("/auth/is-verify", {
       headers: {
-        "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
     });
-    console.log(response);
+    return response.data;
   } catch (error) {
-    console.log(`Error in isAuthenticatedApi : ${error}`);
+    if (axios.isAxiosError(error) && error.response) {
+      console.error(`Error in isAuthenticatedApi: ${error.response.status}`);
+      throw new Error(String(error.response.status));
+    } else {
+      console.error(`Error in isAuthenticatedApi: ${error}`);
+      throw error;
+    }
   }
 };
