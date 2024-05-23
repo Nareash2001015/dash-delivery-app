@@ -21,9 +21,9 @@ function Dashboard() {
     <div className='bg-gray-100 h-screen'>
       <NavBar />
       {user.role == "customer" ? (
-        <CustomerContent user={user} token={token}/>
+        <CustomerContent />
       ) : (
-        <AdminContent/>
+        <AdminContent />
       )}
     </div>
   )

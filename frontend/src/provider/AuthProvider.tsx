@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createContext, useEffect, useState } from "react";
+import { createContext, SetStateAction, useEffect, useState } from "react";
 import {
   JwtPayload,
   LoginDetails,
@@ -30,6 +30,12 @@ const defaultAuthContext: AuthContextInterface = {
     userId: 0,
     role: "",
   },
+  setIsAuthenticated: function (value: SetStateAction<boolean>): void {
+    throw new Error("Function not implemented.");
+  },
+  setToken: function (value: SetStateAction<string>): void {
+    throw new Error("Function not implemented.");
+  }
 };
 
 export const AuthContext =
@@ -163,6 +169,8 @@ export const AuthProvider = ({ children }: Props) => {
     isAuthenticated,
     register,
     user,
+    setIsAuthenticated,
+    setToken
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

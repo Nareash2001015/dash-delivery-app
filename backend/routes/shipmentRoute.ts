@@ -38,9 +38,8 @@ router.post(
       await Shipment.create(shipmentAttributes)
         .then((shipment) => {
           // Create JWT access token
-          return res.status(202).send({
-            shipment: shipment.id,
-          });
+          shipmentAttributes.id = shipment.id
+          return res.status(202).send(shipmentAttributes);
         })
         .catch((error) => {
           return res.status(400).send(error);

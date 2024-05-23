@@ -18,6 +18,8 @@ export interface AuthContextInterface {
     address: string
   ) => Promise<void>;
   user: User;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  setToken: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface Props {
@@ -72,5 +74,19 @@ export interface UserInfo {
 }
 
 export interface ShipmentInfo {
-  
+  id?: string;
+  userId: number;
+  senderName: string;
+  senderAddress: string;
+  recipientName: string;
+  recipientAddress: string;
+  packageDescription: string;
+  packageWeight: string;
+  shipmentStatus?: string;
+}
+
+export interface ModelProps {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpen: boolean;
+  userInfo: UserInfo;
 }
