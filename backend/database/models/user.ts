@@ -1,27 +1,17 @@
 import {
   CreationOptional,
   DataTypes,
-  InferAttributes,
-  InferCreationAttributes,
   Model,
   Optional,
   Sequelize,
 } from "sequelize";
 import { HOSTNAME, DATABASE, USERNAME, PASSWORD } from "../../config";
+import { UserAttributes } from "../../types";
 
 const sequelize: Sequelize = new Sequelize(DATABASE, USERNAME, PASSWORD, {
   host: HOSTNAME,
   dialect: "postgres",
 });
-
-type UserAttributes = {
-  id: number;
-  name: string;
-  address: string;
-  email: string;
-  password: string;
-  role: string;
-};
 
 type UserCreationAttributes = Optional<UserAttributes, 'id'>;
 

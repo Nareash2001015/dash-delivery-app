@@ -2,6 +2,8 @@ import express, { Express } from "express";
 import { CLIENT_BASE_URL, PORT } from "./config";
 import sequelize from "./database/connectDB";
 import authRoute from "./routes/auth";
+import userRoute from "./routes/userRoute";
+import shipmentRoute from "./routes/shipmentRoute";
 
 const cors = require("cors");
 const app: Express = express();
@@ -16,6 +18,8 @@ app.use(express.json());
 
 // Adding routes here
 app.use("/auth", authRoute);
+app.use("/users", userRoute);
+app.use("/shipments", shipmentRoute);
 
 // Adding backend listener
 try {

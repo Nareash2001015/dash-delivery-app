@@ -1,29 +1,18 @@
 import express, { Router, Request, Response } from "express";
 import User from "../database/models/user";
 import jwtGenerator from "../utils/jwtGenerator";
-import { GetUserAuthInfoRequest } from "../types";
+import { GetUserAuthInfoRequest, LoginDetails, UserAttributes } from "../types";
 
 const router: Router = express.Router();
 const bcrypt: any = require("bcrypt");
 const validInfo = require("../middleware/validInfo");
 const authorization = require("../middleware/authorization");
 
-interface UserDetails {
-  name: string;
-  address: string;
-  email: string;
-  password: string;
-  role: string;
-}
 
-interface LoginDetails {
-  email: string;
-  password: string;
-}
 
 router.post("/register", validInfo, async (req: Request, res: Response) => {
   try {
-    const userDetails: UserDetails = req.body;
+    const userDetails: UserAttributes = req.body;
 
     // Error when user already exists
     const user: User | null = await User.findOne({
@@ -51,7 +40,7 @@ router.post("/register", validInfo, async (req: Request, res: Response) => {
         const token: string = jwtGenerator(user.id, userDetails.role);
         return res.status(202).json({ token });
       })
-      .catch((error: any) => {
+      .catch((error) => {
         return res.status(400).send(error);
       });
   } catch (error) {
