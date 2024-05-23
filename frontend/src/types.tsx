@@ -11,7 +11,12 @@ export interface AuthContextInterface {
   logout: () => void;
   login: (email: string, password: string) => Promise<void>;
   isAuthenticated: boolean;
-  register: (name: string, email: string, password: string, address: string) => Promise<void>;
+  register: (
+    name: string,
+    email: string,
+    password: string,
+    address: string
+  ) => Promise<void>;
   user: User;
 }
 
@@ -35,6 +40,11 @@ export interface ToastProps {
   title: string;
 }
 
+export interface UserProps {
+  user: User;
+  token: string;
+}
+
 export interface User {
   userId: number;
   role: string;
@@ -53,4 +63,14 @@ export interface RegistrationDetails {
   password: string;
   address: string;
   role: string;
+}
+
+export interface UserInfo {
+  id: number;
+  name: string;
+  address: string;
+}
+
+export interface ShipmentInfo {
+  
 }
