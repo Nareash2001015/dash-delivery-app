@@ -1,6 +1,7 @@
 import express, { Router, Request, Response } from "express";
 import User from "../database/models/user";
 import jwtGenerator from "../utils/jwtGenerator";
+import { GetUserAuthInfoRequest } from "../types";
 
 const router: Router = express.Router();
 const bcrypt: any = require("bcrypt");
@@ -12,7 +13,7 @@ interface UserDetails {
   address: string;
   email: string;
   password: string;
-  role: string
+  role: string;
 }
 
 interface LoginDetails {
@@ -30,7 +31,7 @@ router.post("/register", validInfo, async (req: Request, res: Response) => {
     });
     if (user) {
       return res.status(401).send({
-        error: "The user already exists",
+        message: "The user already exists",
       });
     }
 
@@ -44,55 +45,70 @@ router.post("/register", validInfo, async (req: Request, res: Response) => {
     userDetails.password = cryptedPassword;
 
     // Insert new User
-    await User.create(userDetails).then(user => {
-      // Create JWT access token
-      const token: string = jwtGenerator(user.id, userDetails.role);
-      return res.status(202).json({token});
-    }).catch((error: any) => {
-      return res.status(400).send(error);
-    })
+    await User.create(userDetails)
+      .then((user) => {
+        // Create JWT access token
+        const token: string = jwtGenerator(user.id, userDetails.role);
+        return res.status(202).json({ token });
+      })
+      .catch((error: any) => {
+        return res.status(400).send(error);
+      });
   } catch (error) {
     return res.status(500).send(error);
   }
 });
 
-router.post("/login", validInfo, async(req: Request, res: Response) => {
+router.post("/login", validInfo, async (req: Request, res: Response) => {
   try {
     const loginDetails: LoginDetails = req.body;
 
     // Error user does not exist
-    const user: User | null = await User.findOne({where: {email: loginDetails.email}});
-    if(!user){
+    const user: User | null = await User.findOne({
+      where: { email: loginDetails.email },
+    });
+    if (!user) {
       return res.status(401).send({
-        "error": "The user does not exist" 
+        message: "The user does not exist",
       });
     }
 
     // Error wrong password
     const match = await bcrypt.compare(loginDetails.password, user.password);
-    if(!match){
+    if (!match) {
       return res.status(403).send({
-        "error": "Invalid user credentials"
-      })
+        message: "Invalid user credentials",
+      });
     }
 
     // Generate JWT token
     const token = jwtGenerator(user.id, user.role);
-    res.status(200).json({token});
+    res.status(200).json({ token });
   } catch (error) {
     return res.status(500).send(error);
   }
-})
+});
 
-router.get("/is-verify", authorization, async(req: Request, res: Response) => {
+router.get("/is-verify", authorization, async (req: GetUserAuthInfoRequest, res: Response) => {
   try {
+    // Check if req.user exists
+    if (!req.user) {
+      return res.status(403).send({
+        error: "User not authenticated",
+      });
+    }
+
+    // Respond with the authenticated status and any additional data
     return res.send({
-      authenticated: true
-    })
+      authenticated: true,
+      user: req.user, // or whatever user information you need
+    });
   } catch (error) {
-    return res.status(500).send(error);
+    console.error('Error in is-verify endpoint:', error);
+    return res.status(500).send({
+      error: 'Internal Server Error',
+    });
   }
-})
+});
 
 export default router;
-

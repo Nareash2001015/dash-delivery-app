@@ -1,13 +1,17 @@
 import express, { Express } from "express";
-import { PORT } from "./config";
+import { CLIENT_BASE_URL, PORT } from "./config";
 import sequelize from "./database/connectDB";
 import authRoute from "./routes/auth";
-import { error } from "console";
 
 const cors = require("cors");
 const app: Express = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: CLIENT_BASE_URL,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Adding routes here
