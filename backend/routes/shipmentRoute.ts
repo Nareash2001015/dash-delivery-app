@@ -16,7 +16,7 @@ router.get(
           error: "User not authenticated",
         });
       }
-      const shipmentList: Promise<Shipment[]> = Shipment.findAll();
+      const shipmentList: Shipment[] = await Shipment.findAll();
       return res.status(200).send(shipmentList);
     } catch (error) {
       return res.status(500).send(error);
@@ -51,6 +51,65 @@ router.post(
   }
 );
 
+router.delete(
+  "/:id",
+  authorization,
+  async (req: GetUserAuthInfoRequest, res: Response) => {
+    try {
+      const id: string = req.params.id;
+      if (!req.user) {
+        return res.status(403).send({
+          error: "User not authenticated",
+        });
+      }
+      const shipment: Shipment | null = await Shipment.findByPk(id);
+      if (!shipment) {
+        return res.status(401).send({
+          message: "The shipment does not exists",
+        });
+      }
+      await Shipment.destroy({
+        where: {
+          id: id,
+        },
+      }).then(() => {
+        return res.status(200).send();
+      });
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  }
+);
+
+router.put(
+  "/:id",
+  authorization,
+  async (req: GetUserAuthInfoRequest, res: Response) => {
+    try {
+      const id: string = req.params.id;
+      const shipmentAttributes: ShipmentAttributes = req.body;
+      if (!req.user) {
+        return res.status(403).send({
+          error: "User not authenticated",
+        });
+      }
+      const shipment: Shipment | null = await Shipment.findByPk(id);
+      if (!shipment) {
+        return res.status(401).send({
+          message: "The shipment does not exists",
+        });
+      }
+      await User.update(shipment, {
+        where: {
+          id: id,
+        },
+      });
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  }
+);
+
 router.get(
   "/user/:id",
   authorization,
@@ -68,14 +127,11 @@ router.get(
           message: "The user does not exists",
         });
       }
-      const shipmentList: Promise<Shipment[]> = Shipment.findAll(
-        {
-            group: "userId",
-            where : {
-                userId: id
-            }
-        }
-      )
+      const shipmentList: Shipment[] = await Shipment.findAll({
+        where: {
+          userId: id,
+        },
+      });
       res.status(200).send(shipmentList);
     } catch (error) {
       return res.status(500).send(error);
