@@ -61,8 +61,6 @@ const CreateShipmentModel: React.FC<CreateShipmentModelProps> = ({
     try {
       const shipment: ShipmentInfo = {
         userId: userInfo.id,
-        senderName: userInfo.name,
-        senderAddress: userInfo.address,
         recipientName: recipientName,
         recipientAddress: recipientAddress,
         packageDescription: packageDescription,
@@ -154,11 +152,11 @@ const CreateShipmentModel: React.FC<CreateShipmentModelProps> = ({
     target: { value: React.SetStateAction<string> };
   }) => {
     setPackageWeight(e.target.value);
-    if (parseInt(packageWeight) <= 20) {
+    if (packageWeight.length < 3) {
       setpackageWeightErrorFlag(false);
       setPackageWeightError("");
     } else {
-      setPackageWeightError("Package Weight should be less than 20 kg");
+      setPackageWeightError("Package Weight should be less than 100 kg");
       setpackageWeightErrorFlag(true);
     }
   };

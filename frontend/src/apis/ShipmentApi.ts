@@ -2,7 +2,7 @@ import axios from "axios";
 import { ShipmentInfo } from "../types";
 import ApiManager from "./ApiManager";
 
-export const getShipmentInfoApi = async (
+export const getShipmentInfoByUserApi = async (
   userId: number,
   token: string
 ): Promise<ShipmentInfo[]> => {
@@ -16,11 +16,34 @@ export const getShipmentInfoApi = async (
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       console.error(
-        `Error in getShipmentInfoApi: ${error.response.data.message}`
+        `Error in getShipmentInfoByUserApi: ${error.response.data.message}`
       );
       throw new Error(error.response.data.message);
     } else {
-      console.error(`Error in getShipmentInfoApi: ${error}`);
+      console.error(`Error in getShipmentInfoByUserApi: ${error}`);
+      throw error;
+    }
+  }
+};
+
+export const getAllShipmentInfoApi = async (
+  token: string
+): Promise<ShipmentInfo[]> => {
+  try {
+    const response = await ApiManager.get('/shipments/all', {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.error(
+        `Error in getAllShipmentInfoApi: ${error.response.data.message}`
+      );
+      throw new Error(error.response.data.message);
+    } else {
+      console.error(`Error in getAllShipmentInfoApi: ${error}`);
       throw error;
     }
   }

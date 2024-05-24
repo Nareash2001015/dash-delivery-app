@@ -16,7 +16,9 @@ router.get(
           error: "User not authenticated",
         });
       }
-      const shipmentList: Shipment[] = await Shipment.findAll();
+      const shipmentList: Shipment[] = await Shipment.findAll({
+        include: { model: User, as: "user", attributes: ["name", "address"] },
+      });
       return res.status(200).send(shipmentList);
     } catch (error) {
       return res.status(500).send(error);
@@ -102,7 +104,9 @@ router.put(
           id: id,
         },
       }).then(async () => {
-        const shipment = await Shipment.findByPk(id);
+        const shipment = await Shipment.findByPk(id, {
+          include: { model: User, as: "user", attributes: ["name", "address"] },
+        });
         return res.status(200).send(shipment);
       })
     } catch (error) {

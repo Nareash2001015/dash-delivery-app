@@ -76,13 +76,20 @@ export interface UserInfo {
 export interface ShipmentInfo {
   id?: string;
   userId?: number;
-  senderName?: string;
-  senderAddress?: string;
+  recipientName?: string;
+  recipientAddress?: string;
+  packageDescription?: string;
+  packageWeight?: string;
+  shipmentStatus?: string;
+  user?: SenderInfo
+}
+
+export interface UserShipmentInfo {
+  id: string;
   recipientName: string;
   recipientAddress: string;
   packageDescription: string;
   packageWeight: string;
-  shipmentStatus?: string;
 }
 
 export interface CreateShipmentModelProps {
@@ -96,6 +103,15 @@ export interface UpdateShipmentModelProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
   setShipmentInfo: React.Dispatch<React.SetStateAction<ShipmentInfo[]>>;
-  shipment: ShipmentInfo;
+  shipment: UserShipmentInfo;
 }
 
+export interface SenderInfo{
+  name: string;
+  address: string;
+}
+
+export interface ShipmentStatus {
+  id: string,
+  status: string
+}

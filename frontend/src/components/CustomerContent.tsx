@@ -12,9 +12,9 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/react";
-import { ShipmentInfo, UserInfo } from "../types";
+import { ShipmentInfo, UserInfo, UserShipmentInfo } from "../types";
 import { getUserInfoApi } from "../apis/UserApi";
-import { deleteShipmentApi, getShipmentInfoApi } from "../apis/ShipmentApi";
+import { deleteShipmentApi, getShipmentInfoByUserApi } from "../apis/ShipmentApi";
 import { AuthContext } from "../provider/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import CreateShipmentModel from "./CreateShipmentModel";
@@ -33,7 +33,8 @@ const CustomerContent = () => {
   const [shipmentInfo, setShipmentInfo] = useState<ShipmentInfo[]>([]);
   const [isCreateModelOpen, setIsCreateModelOpen] = useState<boolean>(false);
   const [isUpdateModelOpen, setIsUpdateModelOpen] = useState<boolean>(false);
-  const [selectedShipment, setSelectedShipment] = useState<ShipmentInfo>({
+  const [selectedShipment, setSelectedShipment] = useState<UserShipmentInfo>({
+    id: "",
     recipientName: "",
     recipientAddress: "",
     packageDescription: "",
@@ -96,7 +97,7 @@ const CustomerContent = () => {
     }
     async function fetchShipments() {
       try {
-        const response = await getShipmentInfoApi(user.userId, token);
+        const response = await getShipmentInfoByUserApi(user.userId, token);
         setShipmentInfo(response);
       } catch (error) {
         if (error instanceof Error) {
@@ -124,6 +125,12 @@ const CustomerContent = () => {
   }, []);
   return (
     <div>
+      <div className="mx-20 mt-10 text-xl font-bold">
+        {user.role}
+      </div>
+      <div className="mx-20 mb-10 text-3xl font-bold">
+        Hello {userInfo.name} :)
+      </div>
       <div className="mx-20 mt-20 flex justify-end">
         <Button
           colorScheme="blue"
@@ -175,7 +182,13 @@ const CustomerContent = () => {
                         size={"35"}
                         className="m-5 text-blue-950"
                         onClick={() => {
-                          setSelectedShipment(shipment);
+                          setSelectedShipment({
+                            id: shipment.id ?? "",
+                            recipientName: shipment.recipientName ?? "",
+                            recipientAddress: shipment.recipientAddress ?? "",
+                            packageDescription: shipment.packageDescription ?? "",
+                            packageWeight: shipment.packageWeight ?? ""
+                          });
                           setIsUpdateModelOpen(true);
                         }}
                       />

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useContext, useEffect, useState } from "react";
-import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import { useContext, useEffect, useState } from "react";
+import { FaSave } from "react-icons/fa";
 import {
   Table,
   Thead,
@@ -9,56 +9,76 @@ import {
   Th,
   Td,
   TableContainer,
-  Button,
   useToast,
+  Select,
 } from "@chakra-ui/react";
-import { ShipmentInfo, UserInfo } from "../types";
+import { ShipmentInfo, ShipmentStatus, UserInfo } from "../types";
 import { getUserInfoApi } from "../apis/UserApi";
-import { deleteShipmentApi, getShipmentInfoApi } from "../apis/ShipmentApi";
 import { AuthContext } from "../provider/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import CreateShipmentModel from "./CreateShipmentModel";
-import UpdateShipmentModel from "./UpdateShipmentModel";
+import { getAllShipmentInfoApi, updateShipmentApi } from "../apis/ShipmentApi";
 
-const AdminContent = () => {
+const CustomerContent = () => {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
   const toast = useToast();
   const { user, token, setIsAuthenticated, setToken } = authContext;
   const [userInfo, setUserInfo] = useState<UserInfo>({
-    id: 0,
+    id: user.userId,
     address: "",
     name: "",
   });
   const [shipmentInfo, setShipmentInfo] = useState<ShipmentInfo[]>([]);
-  const [isCreateModelOpen, setIsCreateModelOpen] = useState<boolean>(false);
-  const [isUpdateModelOpen, setIsUpdateModelOpen] = useState<boolean>(false);
+  const [shipmentStatus, setShipmentStatus] = useState<ShipmentStatus>({
+    id: "",
+    status: "",
+  });
 
-  const handleDeleteShipment = async (id: string) => {
+  const handleUpdateShipment = async () => {
     try {
-      await deleteShipmentApi(id, token);
-      setShipmentInfo((prevShipments) =>
-        prevShipments.filter((shipment) => shipment.id !== id)
+      if (shipmentStatus.id === "") {
+        throw Error("Shipment is empty");
+      }
+      const response = await updateShipmentApi(
+        shipmentStatus.id,
+        {
+          shipmentStatus: shipmentStatus.status,
+        },
+        token
       );
+      toast({
+        title: "Shipment updated sucessfully",
+        position: "top-right",
+        status: "success",
+        isClosable: true,
+      });
+      setShipmentInfo((prevShipmentInfo) => {
+        const updatedShipmentInfo = prevShipmentInfo.filter(
+          (item) => item.id !== shipmentStatus.id
+        );
+        return [response, ...updatedShipmentInfo];
+      });
     } catch (error) {
+      let errorMessage: string;
       if (error instanceof Error) {
-        if (error.message == "Invalid token") {
+        if (error.message === "Invalid token") {
           localStorage.removeItem("token");
           setToken("");
           setIsAuthenticated(false);
           navigate("/home");
-          toast({
-            title: "Session expired",
-            position: "top-right",
-            status: "error",
-            isClosable: true,
-          });
+          errorMessage = "Session expired";
         } else {
-          console.log(error.message);
+          errorMessage = error.message;
         }
       } else {
-        console.log(error);
+        errorMessage = String(error);
       }
+      toast({
+        title: errorMessage,
+        position: "top-right",
+        status: "error",
+        isClosable: true,
+      });
     }
   };
 
@@ -90,7 +110,7 @@ const AdminContent = () => {
     }
     async function fetchShipments() {
       try {
-        const response = await getShipmentInfoApi(user.userId, token);
+        const response = await getAllShipmentInfoApi(token);
         setShipmentInfo(response);
       } catch (error) {
         if (error instanceof Error) {
@@ -115,32 +135,21 @@ const AdminContent = () => {
     }
     fetchUser();
     fetchShipments();
-  }, []);
+  });
   return (
     <div>
-      <div className="mx-20 mt-20 flex justify-end">
-        <Button
-          colorScheme="blue"
-          variant="solid"
-          rightIcon={<FaPlus />}
-          onClick={() => {
-            setIsCreateModelOpen(true);
-          }}
-        >
-          Add shipment
-        </Button>
+      <div className="mx-20 mt-10 text-xl font-bold">{user.role}</div>
+      <div className="mx-20 mb-10 text-3xl font-bold">
+        Hello {userInfo.name} :)
       </div>
-      <CreateShipmentModel
-        isOpen={isCreateModelOpen}
-        setIsOpen={setIsCreateModelOpen}
-        userInfo={userInfo}
-        setShipmentInfo={setShipmentInfo}
-      />
       <div className="mx-20 my-5">
         <TableContainer>
           <Table variant="simple">
             <Thead>
               <Tr>
+                <Th>Track number</Th>
+                <Th>Sender Name</Th>
+                <Th>Sender Address</Th>
                 <Th>Recipient Name</Th>
                 <Th>Recipient Address</Th>
                 <Th>Package Description</Th>
@@ -153,29 +162,41 @@ const AdminContent = () => {
               {shipmentInfo.map((shipment) => {
                 return (
                   <Tr key={shipment.id}>
+                    <Td>{shipment.id}</Td>
+                    <Td>{shipment.user?.name}</Td>
+                    <Td>{shipment.user?.address}</Td>
                     <Td>{shipment.recipientName}</Td>
                     <Td>{shipment.recipientAddress}</Td>
                     <Td>{shipment.packageDescription}</Td>
                     <Td>{shipment.packageWeight}</Td>
-                    <Td>{shipment.shipmentStatus}</Td>
+                    <Td>
+                      <Select
+                        variant="outline"
+                        onChange={(e) =>
+                          setShipmentStatus({
+                            id: shipment.id ?? "",
+                            status: e.target.value,
+                          })
+                        }
+                        defaultValue={shipment.shipmentStatus}
+                        value={
+                          shipmentStatus.id == shipment.id
+                            ? shipmentStatus.status
+                            : shipment.shipmentStatus
+                        }
+                      >
+                        <option value="pending">pending</option>
+                        <option value="in transit">in transit</option>
+                        <option value="delivered">delivered</option>
+                      </Select>
+                    </Td>
                     <Td className="flex flex-row items-center">
-                      <FaEdit
+                      <FaSave
                         size={"35"}
                         className="m-5 text-blue-950"
-                        onClick={() => setIsUpdateModelOpen(true)}
-                      />
-                      <FaTrash
-                        size={"30"}
-                        className="m-5 text-red-800"
-                        onClick={() => handleDeleteShipment(shipment.id ?? "")}
+                        onClick={handleUpdateShipment}
                       />
                     </Td>
-                    <UpdateShipmentModel
-                      isOpen={isUpdateModelOpen}
-                      setIsOpen={setIsUpdateModelOpen}
-                      setShipmentInfo={setShipmentInfo}
-                      shipment={shipment}
-                    />
                   </Tr>
                 );
               })}
@@ -187,4 +208,4 @@ const AdminContent = () => {
   );
 };
 
-export default AdminContent;
+export default CustomerContent;
