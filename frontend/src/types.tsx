@@ -75,9 +75,9 @@ export interface UserInfo {
 
 export interface ShipmentInfo {
   id?: string;
-  userId: number;
-  senderName: string;
-  senderAddress: string;
+  userId?: number;
+  senderName?: string;
+  senderAddress?: string;
   recipientName: string;
   recipientAddress: string;
   packageDescription: string;
@@ -95,7 +95,6 @@ export interface CreateShipmentModelProps {
 export interface UpdateShipmentModelProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
-  userInfo: UserInfo;
   setShipmentInfo: React.Dispatch<React.SetStateAction<ShipmentInfo[]>>;
   shipment: ShipmentInfo;
 }

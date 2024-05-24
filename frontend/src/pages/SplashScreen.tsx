@@ -1,18 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {  useState, useContext, useEffect } from "react";
+import {  useState } from "react";
 import { CircularProgress } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../provider/AuthProvider";
 
 function SplashScreen() {
   const navigate = useNavigate();
-  const authContext = useContext(AuthContext);
-  const token = authContext.token;
-  useEffect(() => {
-    if(token){
-      navigate("/dashboard")
-    }
-  })
   const [progress, setProgress] = useState<number>(0);
   setInterval(progressFunc, 1000);
   function progressFunc() {

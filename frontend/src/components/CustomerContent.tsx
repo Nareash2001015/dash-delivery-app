@@ -20,19 +20,25 @@ import { useNavigate } from "react-router-dom";
 import CreateShipmentModel from "./CreateShipmentModel";
 import UpdateShipmentModel from "./UpdateShipmentModel";
 
-const AdminContent = () => {
+const CustomerContent = () => {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
   const toast = useToast();
   const { user, token, setIsAuthenticated, setToken } = authContext;
   const [userInfo, setUserInfo] = useState<UserInfo>({
-    id: 0,
+    id: user.userId,
     address: "",
     name: "",
   });
   const [shipmentInfo, setShipmentInfo] = useState<ShipmentInfo[]>([]);
   const [isCreateModelOpen, setIsCreateModelOpen] = useState<boolean>(false);
   const [isUpdateModelOpen, setIsUpdateModelOpen] = useState<boolean>(false);
+  const [selectedShipment, setSelectedShipment] = useState<ShipmentInfo>({
+    recipientName: "",
+    recipientAddress: "",
+    packageDescription: "",
+    packageWeight: "",
+  });
 
   const handleDeleteShipment = async (id: string) => {
     try {
@@ -136,6 +142,12 @@ const AdminContent = () => {
         userInfo={userInfo}
         setShipmentInfo={setShipmentInfo}
       />
+      <UpdateShipmentModel
+        isOpen={isUpdateModelOpen}
+        setIsOpen={setIsUpdateModelOpen}
+        setShipmentInfo={setShipmentInfo}
+        shipment={selectedShipment}
+      />
       <div className="mx-20 my-5">
         <TableContainer>
           <Table variant="simple">
@@ -162,7 +174,10 @@ const AdminContent = () => {
                       <FaEdit
                         size={"35"}
                         className="m-5 text-blue-950"
-                        onClick={() => setIsUpdateModelOpen(true)}
+                        onClick={() => {
+                          setSelectedShipment(shipment);
+                          setIsUpdateModelOpen(true);
+                        }}
                       />
                       <FaTrash
                         size={"30"}
@@ -170,12 +185,6 @@ const AdminContent = () => {
                         onClick={() => handleDeleteShipment(shipment.id ?? "")}
                       />
                     </Td>
-                    <UpdateShipmentModel
-                      isOpen={isUpdateModelOpen}
-                      setIsOpen={setIsUpdateModelOpen}
-                      setShipmentInfo={setShipmentInfo}
-                      shipment={shipment}
-                    />
                   </Tr>
                 );
               })}
@@ -187,4 +196,4 @@ const AdminContent = () => {
   );
 };
 
-export default AdminContent;
+export default CustomerContent;

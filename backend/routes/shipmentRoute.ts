@@ -97,11 +97,14 @@ router.put(
           message: "The shipment does not exists",
         });
       }
-      await User.update(shipment, {
+      await Shipment.update(shipmentAttributes, {
         where: {
           id: id,
         },
-      });
+      }).then(async () => {
+        const shipment = await Shipment.findByPk(id);
+        return res.status(200).send(shipment);
+      })
     } catch (error) {
       return res.status(500).send(error);
     }

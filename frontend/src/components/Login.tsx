@@ -104,10 +104,16 @@ const Login: React.FC<LoginProps> = ({ setIsLoginPage }) => {
           <div>
             <FormControl>
               <FormLabel>Email</FormLabel>
-              <Input type="email" value={email} onChange={handleEmailChange} />
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+              />
               <p className="text-red-600">{emailError}</p>
               <FormLabel>Password</FormLabel>
               <Input
+                id="password"
                 type="password"
                 value={password}
                 onChange={handlePasswordChange}

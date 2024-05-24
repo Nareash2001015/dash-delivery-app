@@ -16,9 +16,7 @@ router.get(
           error: "User not authenticated",
         });
       }
-      const user: User | null = await User.findOne({
-        where: { id: id },
-      });
+      const user: User | null = await User.findByPk(id);
       if (!user) {
         return res.status(401).send({
           message: "The user does not exists",

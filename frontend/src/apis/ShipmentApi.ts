@@ -40,11 +40,11 @@ export const createShipmentApi = async (
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       console.error(
-        `Error in getShipmentInfoApi: ${error.response.data.message}`
+        `Error in createShipmentApi: ${error.response.data.message}`
       );
       throw new Error(error.response.data.message);
     } else {
-      console.error(`Error in getShipmentInfoApi: ${error}`);
+      console.error(`Error in createShipmentApi: ${error}`);
       throw error;
     }
   }
@@ -64,11 +64,39 @@ export const deleteShipmentApi = async (
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       console.error(
-        `Error in getShipmentInfoApi: ${error.response.data.message}`
+        `Error in deleteShipmentApi: ${error.response.data.message}`
       );
       throw new Error(error.response.data.message);
     } else {
-      console.error(`Error in getShipmentInfoApi: ${error}`);
+      console.error(`Error in deleteShipmentApi: ${error}`);
+      throw error;
+    }
+  }
+};
+
+export const updateShipmentApi = async (
+  id: string,
+  shipment: ShipmentInfo,
+  token: string
+): Promise<ShipmentInfo> => {
+  try {
+    if (id === "") {
+      throw Error("The id is empty");
+    }
+    const response = await ApiManager.put(`/shipments/${id}`, shipment, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.error(
+        `Error in updateShipmentApi: ${error.response.data.message}`
+      );
+      throw new Error(error.response.data.message);
+    } else {
+      console.error(`Error in updateShipmentApi: ${error}`);
       throw error;
     }
   }
