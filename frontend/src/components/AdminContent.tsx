@@ -40,6 +40,7 @@ const CustomerContent = () => {
         throw Error("Shipment is empty");
       }
       const response = await updateShipmentApi(
+        
         shipmentStatus.id,
         {
           shipmentStatus: shipmentStatus.status,
@@ -111,6 +112,7 @@ const CustomerContent = () => {
     async function fetchShipments() {
       try {
         const response = await getAllShipmentInfoApi(token);
+        console.log(response);
         setShipmentInfo(response);
       } catch (error) {
         if (error instanceof Error) {
@@ -135,7 +137,7 @@ const CustomerContent = () => {
     }
     fetchUser();
     fetchShipments();
-  });
+  }, []);
   return (
     <div>
       <div className="mx-20 mt-10 text-xl font-bold">{user.role}</div>

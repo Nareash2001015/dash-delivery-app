@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }: Props) => {
       }
     }
     fetchAuthenticationInfo();
-  });
+  }, []);
 
   function extractTokenPayload(token: string): void {
     const payload: string = token.split(".")[1];

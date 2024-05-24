@@ -16,7 +16,7 @@ function Dashboard() {
     if(!isAuthenticated){
       navigate("/home")
     }
-  })
+  }, []);
   return (
     <div className='bg-gray-100 h-screen'>
       <NavBar />
@@ -26,7 +26,7 @@ function Dashboard() {
         <AdminContent />
       )}
     </div>
-  )
+  );
 }
 
 export default Dashboard

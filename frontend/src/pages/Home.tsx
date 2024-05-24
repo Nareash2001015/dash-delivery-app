@@ -13,7 +13,7 @@ function Home() {
     if(isAuthenticated){
       navigate("/dashboard");
     }
-  })
+  }, []);
   const[isLoginPage, setIsLoginPage] = useState<boolean>(true);
 
   return (
