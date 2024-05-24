@@ -12,8 +12,11 @@ import {
 import validator from "validator";
 import { AuthContext } from "../provider/AuthProvider";
 import { LoginProps } from "../types";
+import { Text } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC<LoginProps> = ({ setIsLoginPage }) => {
+  const navigate = useNavigate()
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("Email is required");
@@ -93,6 +96,9 @@ const Login: React.FC<LoginProps> = ({ setIsLoginPage }) => {
       <div className="flex w-2/3 flex-row rounded-3xl bg-gray-100 bg-opacity-45">
         <div className="flex flex-col items-center rounded-3xl w-2/5">
           <div className="bg-dash-delivery-logo rounded-2x bg-cover mt-20 h-32 w-40"></div>
+          <Button colorScheme="blue" variant="solid" className="my-6" onClick={() => navigate('/track')}>
+            Track my shipment
+          </Button>
         </div>
         <div className=" p-5  w-3/5 ">
           <div>
