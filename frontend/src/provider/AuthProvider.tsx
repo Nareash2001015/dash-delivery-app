@@ -118,6 +118,7 @@ export const AuthProvider = ({ children }: Props) => {
       setToken("");
       localStorage.removeItem("token");
       setIsAuthenticated(false);
+      navigate("/home");
       toast({
         title: "Logout successful",
         position: "top-right",
