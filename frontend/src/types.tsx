@@ -81,7 +81,7 @@ export interface ShipmentInfo {
   packageDescription?: string;
   packageWeight?: string;
   shipmentStatus?: string;
-  user?: SenderInfo
+  user?: SenderInfo;
 }
 
 export interface UserShipmentInfo {
@@ -90,6 +90,19 @@ export interface UserShipmentInfo {
   recipientAddress: string;
   packageDescription: string;
   packageWeight: string;
+}
+
+export interface UserAddress {
+  address: string;
+}
+
+export interface TrackShipmentInfo {
+  id: string;
+  recipientAddress: string;
+  packageDescription: string;
+  packageWeight: string;
+  shipmentStatus: string;
+  user: UserAddress;
 }
 
 export interface CreateShipmentModelProps {
@@ -106,12 +119,22 @@ export interface UpdateShipmentModelProps {
   shipment: UserShipmentInfo;
 }
 
-export interface SenderInfo{
+export interface TrackShipmentProps {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpen: boolean;
+  shipmentInfo: TrackShipmentInfo;
+}
+
+export interface ShipmentCardProps {
+  shipmentInfo: TrackShipmentInfo;
+}
+
+export interface SenderInfo {
   name: string;
   address: string;
 }
 
 export interface ShipmentStatus {
-  id: string,
-  status: string
+  id: string;
+  status: string;
 }

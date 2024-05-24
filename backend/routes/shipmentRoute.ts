@@ -26,6 +26,43 @@ router.get(
   }
 );
 
+router.get("/:id", async (req: GetUserAuthInfoRequest, res: Response) => {
+  try {
+    const id: string = req.params.id;
+    const shipment: Shipment | null = await Shipment.findByPk(id);
+    if (!shipment) {
+      return res.status(400).send({
+        message: "Track ID does not exists",
+      });
+    }
+    await Shipment.findOne({
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["address"],
+        },
+      ],
+      where: {
+        id: id,
+      },
+      attributes: [
+        "id",
+        "recipientAddress",
+        "packageDescription",
+        "packageWeight",
+        "shipmentStatus",
+      ],
+    }).then((shipment) => {
+      return res.status(200).send(shipment);
+    });
+  } catch (error) {
+    return res.status(500).send({
+      message: "Invalid tracking ID",
+    });
+  }
+});
+
 router.post(
   "/",
   authorization,
@@ -108,7 +145,7 @@ router.put(
           include: { model: User, as: "user", attributes: ["name", "address"] },
         });
         return res.status(200).send(shipment);
-      })
+      });
     } catch (error) {
       return res.status(500).send(error);
     }
