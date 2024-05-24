@@ -20,8 +20,6 @@ export type UserAttributes = {
 
 export type ShipmentAttributes = {
   id: number;
-  senderName: string;
-  senderAddress: string;
   recipientName: string;
   recipientAddress: string;
   packageDescription: string;

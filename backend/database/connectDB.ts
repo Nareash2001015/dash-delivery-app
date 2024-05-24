@@ -9,7 +9,4 @@ const sequelize: Sequelize = new Sequelize(DATABASE, USERNAME, PASSWORD, {
   dialect: "postgres",
 });
 
-// Assciations
-User.hasMany(Shipment, { foreignKey: "userId" });
-
 export default sequelize;

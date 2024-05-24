@@ -26,5 +26,8 @@ module.exports = async (req: GetUserAuthInfoRequest, res: Response, next: NextFu
     next();
   } catch (error) {
     console.error('JWT Verification Error:', error);
+    // res.status(403).send({
+    //   message: "Invalid token",
+    // });
   }
 };
