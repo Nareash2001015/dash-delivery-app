@@ -44,13 +44,13 @@ const UpdateShipmentModel: React.FC<UpdateShipmentModelProps> = ({
   const [packageWeightError, setPackageWeightError] = useState<string>("");
 
   const [recipientNameErrorFlag, setRecipientNameErrorFlag] =
-    useState<boolean>(true);
+    useState<boolean>(false);
   const [recipientAddressErrorFlag, setRecipientAddressErrorFlag] =
-    useState<boolean>(true);
+    useState<boolean>(false);
   const [packageDescriptionErrorFlag, setPackageDescriptionErrorFlag] =
-    useState<boolean>(true);
+    useState<boolean>(false);
   const [packageWeightErrorFlag, setpackageWeightErrorFlag] =
-    useState<boolean>(true);
+    useState<boolean>(false);
 
   useEffect(() => {
     setRecipientName(shipment.recipientName);
@@ -68,7 +68,7 @@ const UpdateShipmentModel: React.FC<UpdateShipmentModelProps> = ({
         packageWeight: packageWeight,
       };
       const response = await updateShipmentApi(
-        shipment.id ?? "",
+        shipment.id,
         shipmentInfo,
         token
       );
@@ -166,7 +166,7 @@ const UpdateShipmentModel: React.FC<UpdateShipmentModelProps> = ({
       setpackageWeightErrorFlag(false);
       setPackageWeightError("");
     } else {
-      setPackageWeightError("Package Weight should be less than 20 kg");
+      setPackageWeightError("Package Weight should be less than 100 kg");
       setpackageWeightErrorFlag(true);
     }
   };
@@ -184,7 +184,7 @@ const UpdateShipmentModel: React.FC<UpdateShipmentModelProps> = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create shipment</ModalHeader>
+        <ModalHeader>Update shipment</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
           <FormControl>

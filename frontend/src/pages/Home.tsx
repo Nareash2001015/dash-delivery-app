@@ -4,7 +4,6 @@ import Register from "../components/Register";
 import { AuthContext } from "../provider/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
-
 function Home() {
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);

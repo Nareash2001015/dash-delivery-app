@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createContext, SetStateAction, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import {
   JwtPayload,
   LoginDetails,
@@ -30,10 +30,10 @@ const defaultAuthContext: AuthContextInterface = {
     userId: 0,
     role: "",
   },
-  setIsAuthenticated: function (value: SetStateAction<boolean>): void {
+  setIsAuthenticated: function (): void {
     throw new Error("Function not implemented.");
   },
-  setToken: function (value: SetStateAction<string>): void {
+  setToken: function (): void {
     throw new Error("Function not implemented.");
   }
 };
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }: Props) => {
         }
       } catch (error) {
         if (error instanceof Error) {
-          if (error.message === "403") {
+          if (error.message === "403" || error.message === "Invalid token") {
             localStorage.removeItem("token");
             setToken("");
             setIsAuthenticated(false);
@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }: Props) => {
       }
     }
     fetchAuthenticationInfo();
-  }, []);
+  });
 
   function extractTokenPayload(token: string): void {
     const payload: string = token.split(".")[1];

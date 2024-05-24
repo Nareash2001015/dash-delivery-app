@@ -137,7 +137,6 @@ const Register: React.FC<LoginProps> = ({ setIsLoginPage }) => {
   const handlePasswordChange = (e: {
     target: { value: React.SetStateAction<string> };
   }) => {
-    console.log(password);
     setPassword(e.target.value);
     if (password.length < 8) {
       setPasswordError("Password should be at least 8 characters long");
