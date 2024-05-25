@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createContext, useEffect, useState } from "react";
 import {
+  AuthenticatedStatus,
   JwtPayload,
   LoginDetails,
   RegistrationDetails,
@@ -58,6 +59,7 @@ export const AuthProvider = ({ children }: Props) => {
           setToken(availableToken);
           await isAuthenticateApi(availableToken);
           setIsAuthenticated(true);
+          navigate("/dashboard");
           extractTokenPayload(availableToken);
         } else {
           navigate("/home");

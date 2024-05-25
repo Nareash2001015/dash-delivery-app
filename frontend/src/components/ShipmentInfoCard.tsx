@@ -6,7 +6,6 @@ import {
   Text,
   Heading,
   Step,
-  StepDescription,
   StepIcon,
   StepIndicator,
   StepNumber,

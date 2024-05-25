@@ -47,6 +47,12 @@ const CustomerContent = () => {
       setShipmentInfo((prevShipments) =>
         prevShipments.filter((shipment) => shipment.id !== id)
       );
+      toast({
+        title: "Shipment deleted sucessfully",
+        position: "top-right",
+        status: "success",
+        isClosable: true,
+      });
     } catch (error) {
       if (error instanceof Error) {
         if (error.message == "Invalid token") {

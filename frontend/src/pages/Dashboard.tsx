@@ -10,7 +10,6 @@ function Dashboard() {
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
   const user = authContext.user;
-  const token = authContext.token;
   const isAuthenticated = authContext.isAuthenticated;
   useEffect(() => {
     if(!isAuthenticated){
